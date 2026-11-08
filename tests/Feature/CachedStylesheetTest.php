@@ -6,6 +6,16 @@ use Tests\TestCase;
 
 class CachedStylesheetTest extends TestCase
 {
+    public function test_production_layout_preloads_stylesheet_without_blocking_render(): void
+    {
+        $this->get('/login')
+            ->assertOk()
+            ->assertSee('rel="preload"', false)
+            ->assertSee('as="style"', false)
+            ->assertSee("this.onload=null;this.rel='stylesheet'", false)
+            ->assertSee('<noscript><link rel="stylesheet"', false);
+    }
+
     public function test_hashed_stylesheet_is_served_with_a_year_of_immutable_caching(): void
     {
         $manifest = json_decode(file_get_contents(public_path('build/manifest.json')), true);
