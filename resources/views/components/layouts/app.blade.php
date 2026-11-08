@@ -13,7 +13,9 @@
         html:has(.modal-scroll-lock),
         body:has(.modal-scroll-lock) { overflow: hidden !important; overscroll-behavior: none; }
     </style>
-    @livewireStyles
+    @unless (request()->routeIs('login', 'register'))
+        @livewireStyles
+    @endunless
 </head>
 <body class="h-full font-sans text-slate-800 antialiased" x-data="{ menuOpen: false }">
     @auth
@@ -106,7 +108,7 @@
                     </div>
                 @endif
 
-                {{ $slot }}
+                @yield('content', $slot ?? '')
             </main>
 
             <footer class="bg-ink text-stone-400 py-4 text-center text-xs">&copy; 2026 Delcom &middot; StokKu Gudang</footer>
@@ -142,11 +144,13 @@
                     </span>
                     Stok<span class="text-teal-600">Ku</span>
                 </a>
-                {{ $slot }}
+                @yield('content', $slot ?? '')
             </main>
         </div>
     @endauth
 
-    @livewireScripts
+    @unless (request()->routeIs('login', 'register'))
+        @livewireScripts
+    @endunless
 </body>
 </html>

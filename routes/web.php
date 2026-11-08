@@ -2,10 +2,10 @@
 
 use App\Features\Admin\Livewire\AdminUserStockList;
 use App\Features\Admin\Livewire\UserList;
-use App\Features\Auth\Livewire\Login;
-use App\Features\Auth\Livewire\Register;
+use App\Features\Profile\Livewire\Profile;
 use App\Features\Stock\Livewire\StockDetail;
 use App\Features\Stock\Livewire\StockList;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -18,13 +18,16 @@ Route::middleware(['throttle:1000-per-second'])->group(function () {
                 ? redirect()->route('admin.users')
                 : redirect()->route('stocks.index');
         }
+
         return redirect()->route('login');
     });
 
     // Guest Authentication Routes
     Route::middleware('guest')->group(function () {
-        Route::get('/login', Login::class)->name('login');
-        Route::get('/register', Register::class)->name('register');
+        Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+        Route::post('/login', [AuthController::class, 'login'])->name('login.authenticate');
+        Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+        Route::post('/register', [AuthController::class, 'register'])->name('register.store');
     });
 
     // Authenticated Routes
@@ -33,6 +36,7 @@ Route::middleware(['throttle:1000-per-second'])->group(function () {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+
             return redirect()->route('login');
         })->name('logout');
 
@@ -45,7 +49,7 @@ Route::middleware(['throttle:1000-per-second'])->group(function () {
             ->name('stocks.show');
 
         // User Profile Route
-        Route::get('/profile', \App\Features\Profile\Livewire\Profile::class)->name('profile');
+        Route::get('/profile', Profile::class)->name('profile');
 
         // Admin Routes protected by Role middleware
         Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {

@@ -2,38 +2,44 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Features\Auth\Livewire\Login;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Livewire\Livewire;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_can_render_login_page(): void
+    public function test_login_page_renders_without_loading_livewire(): void
     {
-        $this->get('/login')
-            ->assertStatus(200)
+        $response = $this->get('/login');
+
+        $response
+            ->assertOk()
             ->assertSee('Masuk ke Akun Anda')
             ->assertSee('Username atau Email')
             ->assertSee('id="login-username"', false)
             ->assertSee('id="login-password"', false)
-            ->assertSee('id="login-submit"', false);
+            ->assertDontSee('livewire.min.js');
+
+        $this->assertStringNotContainsString(
+            'no-store',
+            (string) $response->headers->get('Cache-Control')
+        );
     }
 
-    public function test_login_validation(): void
+    public function test_login_requires_username_and_password(): void
     {
-        Livewire::test(Login::class)
-            ->set('login', '')
-            ->set('password', '')
-            ->call('authenticate')
-            ->assertHasErrors(['login', 'password']);
+        $this->from('/login')
+            ->post(route('login.authenticate'), [])
+            ->assertRedirect('/login')
+            ->assertSessionHasErrors(['login', 'password']);
+
+        $this->assertGuest();
     }
 
-    public function test_login_invalid_credentials(): void
+    public function test_invalid_credentials_return_to_login_with_an_error(): void
     {
         User::factory()->create([
             'username' => 'existing_user',
@@ -41,24 +47,18 @@ class LoginTest extends TestCase
             'password' => Hash::make('correct-password'),
         ]);
 
-        // Wrong password with email
-        Livewire::test(Login::class)
-            ->set('login', 'user@test.com')
-            ->set('password', 'wrong-password')
-            ->call('authenticate')
-            ->assertHasErrors(['login']);
-
-        // Wrong password with username
-        Livewire::test(Login::class)
-            ->set('login', 'existing_user')
-            ->set('password', 'wrong-password')
-            ->call('authenticate')
-            ->assertHasErrors(['login']);
+        $this->from('/login')
+            ->post(route('login.authenticate'), [
+                'login' => 'user@test.com',
+                'password' => 'wrong-password',
+            ])
+            ->assertRedirect('/login')
+            ->assertSessionHasErrors('login');
 
         $this->assertGuest();
     }
 
-    public function test_member_login_with_email_redirects_to_stocks(): void
+    public function test_member_can_login_with_email_and_remember_me(): void
     {
         User::factory()->member()->create([
             'username' => 'member1',
@@ -66,18 +66,16 @@ class LoginTest extends TestCase
             'password' => Hash::make('password123'),
         ]);
 
-        Livewire::test(Login::class)
-            ->set('login', 'member@test.com')
-            ->set('password', 'password123')
-            ->set('remember', true)
-            ->call('authenticate')
-            ->assertHasNoErrors()
-            ->assertRedirect(route('stocks.index'));
+        $this->post(route('login.authenticate'), [
+            'login' => 'member@test.com',
+            'password' => 'password123',
+            'remember' => '1',
+        ])->assertRedirect(route('stocks.index'));
 
         $this->assertAuthenticated();
     }
 
-    public function test_member_login_with_username_redirects_to_stocks(): void
+    public function test_member_can_login_with_username(): void
     {
         User::factory()->member()->create([
             'username' => 'member_cool',
@@ -85,17 +83,15 @@ class LoginTest extends TestCase
             'password' => Hash::make('password123'),
         ]);
 
-        Livewire::test(Login::class)
-            ->set('login', 'member_cool')
-            ->set('password', 'password123')
-            ->call('authenticate')
-            ->assertHasNoErrors()
-            ->assertRedirect(route('stocks.index'));
+        $this->post(route('login.authenticate'), [
+            'login' => 'member_cool',
+            'password' => 'password123',
+        ])->assertRedirect(route('stocks.index'));
 
         $this->assertAuthenticated();
     }
 
-    public function test_admin_login_with_username_redirects_to_admin_users(): void
+    public function test_admin_can_login_and_is_redirected_to_user_management(): void
     {
         User::factory()->admin()->create([
             'username' => 'superadmin',
@@ -103,17 +99,15 @@ class LoginTest extends TestCase
             'password' => Hash::make('password123'),
         ]);
 
-        Livewire::test(Login::class)
-            ->set('login', 'superadmin')
-            ->set('password', 'password123')
-            ->call('authenticate')
-            ->assertHasNoErrors()
-            ->assertRedirect(route('admin.users'));
+        $this->post(route('login.authenticate'), [
+            'login' => 'superadmin',
+            'password' => 'password123',
+        ])->assertRedirect(route('admin.users'));
 
         $this->assertAuthenticated();
     }
 
-    public function test_logout(): void
+    public function test_logout_invalidates_the_authenticated_session(): void
     {
         $user = User::factory()->create();
 
