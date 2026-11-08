@@ -65,3 +65,61 @@
     --color-rose-600: #be123c;
     --color-rose-700: #9f1239;
 }
+
+@layer components {
+    .markdown-content > :first-child {
+        margin-top: 0;
+    }
+
+    .markdown-content > * + * {
+        margin-top: 0.75rem;
+    }
+
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3 {
+        color: var(--color-slate-900);
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    .markdown-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .markdown-content h2 {
+        font-size: 1.25rem;
+    }
+
+    .markdown-content h3 {
+        font-size: 1.125rem;
+    }
+
+    .markdown-content ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+    }
+
+    .markdown-content ol {
+        list-style-type: decimal;
+        padding-left: 1.5rem;
+    }
+
+    .markdown-content a {
+        color: var(--color-teal-700);
+        text-decoration: underline;
+    }
+
+    .markdown-content pre {
+        overflow-x: auto;
+        border-radius: 0.5rem;
+        background-color: var(--color-slate-100);
+        padding: 1rem;
+    }
+
+    .markdown-content blockquote {
+        border-left: 3px solid var(--color-slate-300);
+        padding-left: 1rem;
+        color: var(--color-slate-600);
+    }
+}

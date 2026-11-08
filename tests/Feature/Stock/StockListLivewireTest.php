@@ -38,6 +38,17 @@ class StockListLivewireTest extends TestCase
             ->assertDontSee('Barang Rahasia Orang Lain');
     }
 
+    public function test_stock_list_does_not_load_editor_assets_before_opening_a_form(): void
+    {
+        $user = User::factory()->member()->create();
+
+        $this->actingAs($user)
+            ->get('/stocks')
+            ->assertOk()
+            ->assertDontSee('<link rel="preload" as="style" href="https://uicdn.toast.com', false)
+            ->assertDontSee('<script defer src="https://uicdn.toast.com', false);
+    }
+
     public function test_create_stock_validation_and_success(): void
     {
         $user = User::factory()->member()->create();
@@ -192,7 +203,7 @@ class StockListLivewireTest extends TestCase
         $user = User::factory()->member()->create();
         $this->actingAs($user);
 
-        $spreadsheet = new Spreadsheet();
+        $spreadsheet = new Spreadsheet;
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Name');
@@ -315,4 +326,3 @@ class StockListLivewireTest extends TestCase
             ->assertSet('showAiModal', false);
     }
 }
-

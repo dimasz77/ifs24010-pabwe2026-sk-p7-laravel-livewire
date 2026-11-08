@@ -23,6 +23,47 @@
     @unless (request()->routeIs('home', 'login', 'register'))
         @livewireStyles
     @endunless
+    @if (request()->routeIs('stocks.*'))
+        <script>
+            window.loadToastUIEditor = function () {
+                if (window.toastui?.Editor) {
+                    return Promise.resolve(window.toastui.Editor);
+                }
+
+                if (!window.toastUIEditorPromise) {
+                    const stylesheet = document.createElement('link');
+                    stylesheet.rel = 'stylesheet';
+                    stylesheet.href = 'https://uicdn.toast.com/editor/latest/toastui-editor.min.css';
+
+                    const script = document.createElement('script');
+                    script.src = 'https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js';
+                    script.async = true;
+
+                    const load = (element) => new Promise((resolve, reject) => {
+                        element.addEventListener('load', resolve, { once: true });
+                        element.addEventListener('error', () => reject(new Error('Toast UI Editor gagal dimuat.')), { once: true });
+                    });
+
+                    window.toastUIEditorPromise = Promise.all([load(stylesheet), load(script)])
+                        .then(() => {
+                            if (!window.toastui?.Editor) {
+                                throw new Error('Toast UI Editor tidak tersedia setelah aset dimuat.');
+                            }
+
+                            return window.toastui.Editor;
+                        })
+                        .catch((error) => {
+                            window.toastUIEditorPromise = null;
+                            throw error;
+                        });
+
+                    document.head.append(stylesheet, script);
+                }
+
+                return window.toastUIEditorPromise;
+            };
+        </script>
+    @endif
 </head>
 <body class="h-full font-sans text-slate-800 antialiased" x-data="{ menuOpen: false }">
     @auth

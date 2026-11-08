@@ -1,9 +1,4 @@
 <div>
-    <!-- Toast UI Editor CDN Styles & Scripts -->
-    <link rel="preload" as="style" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"></noscript>
-    <script defer src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-
     <!-- Top Navigation Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div class="flex items-center space-x-3">
@@ -174,21 +169,8 @@
             </div>
 
             @if (!empty($stock->description))
-                <!-- Render using Toast UI Viewer -->
-                <div wire:ignore
-                     x-data="{
-                         init() {
-                             if (window.toastui && toastui.Editor) {
-                                 toastui.Editor.factory({
-                                     el: this.$refs.viewerContainer,
-                                     viewer: true,
-                                     initialValue: @js($stock->description)
-                                 });
-                             }
-                         }
-                     }"
-                     class="prose prose-slate max-w-none text-slate-800">
-                    <div x-ref="viewerContainer"></div>
+                <div class="markdown-content text-slate-800">
+                    {!! \Illuminate\Support\Str::markdown($stock->description, ['html_input' => 'strip', 'allow_unsafe_links' => false]) !!}
                 </div>
             @else
                 <div class="py-12 text-center text-slate-600">
@@ -276,29 +258,45 @@
                                  x-data="{
                                      desc: @entangle('description'),
                                      editor: null,
-                                     init() {
-                                         this.editor = new toastui.Editor({
-                                             el: this.$refs.detailEditorContainer,
-                                             height: '300px',
-                                             initialEditType: 'wysiwyg',
-                                             previewStyle: 'vertical',
-                                             initialValue: this.desc || '',
-                                             placeholder: 'Tuliskan rincian spesifikasi barang dalam format teks atau markdown...',
-                                             events: {
-                                                 change: () => {
-                                                     this.desc = this.editor.getMarkdown();
-                                                 }
+                                     loadingEditor: true,
+                                     editorError: false,
+                                     async init() {
+                                         try {
+                                             const Editor = await window.loadToastUIEditor();
+                                             if (!this.$refs.detailEditorContainer?.isConnected) {
+                                                 return;
                                              }
-                                         });
 
-                                         this.$watch('desc', value => {
-                                             if (this.editor && value !== this.editor.getMarkdown()) {
-                                                 this.editor.setMarkdown(value || '', false);
-                                             }
-                                         });
+                                             this.editor = new Editor({
+                                                 el: this.$refs.detailEditorContainer,
+                                                 height: '300px',
+                                                 initialEditType: 'wysiwyg',
+                                                 previewStyle: 'vertical',
+                                                 initialValue: this.desc || '',
+                                                 placeholder: 'Tuliskan rincian spesifikasi barang dalam format teks atau markdown...',
+                                                 events: {
+                                                     change: () => {
+                                                         this.desc = this.editor.getMarkdown();
+                                                     }
+                                                 }
+                                             });
+
+                                             this.$watch('desc', value => {
+                                                 if (this.editor && value !== this.editor.getMarkdown()) {
+                                                     this.editor.setMarkdown(value || '', false);
+                                                 }
+                                             });
+                                         } catch (error) {
+                                             console.error(error);
+                                             this.editorError = true;
+                                         } finally {
+                                             this.loadingEditor = false;
+                                         }
                                      }
                                  }"
                                  class="rounded-xl border border-slate-300 overflow-hidden bg-white">
+                                <p x-show="loadingEditor" class="p-4 text-sm text-slate-500">Memuat editor deskripsi...</p>
+                                <p x-show="editorError" role="alert" class="p-4 text-sm text-rose-700">Editor gagal dimuat. Muat ulang halaman dan coba lagi.</p>
                                 <div x-ref="detailEditorContainer"></div>
                             </div>
                             @error('description') <span class="text-xs text-rose-600 mt-1 block">{{ $message }}</span> @enderror

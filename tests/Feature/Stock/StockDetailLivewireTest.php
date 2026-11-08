@@ -64,6 +64,24 @@ class StockDetailLivewireTest extends TestCase
             ->assertSee('Barang Utama Pro');
     }
 
+    public function test_stock_detail_renders_safe_markdown_without_loading_editor_assets(): void
+    {
+        $user = User::factory()->member()->create();
+        $stock = Stock::factory()->create([
+            'user_id' => $user->id,
+            'description' => "# Detail Markdown\n\n<script>alert('unsafe')</script>\n\n[tautan](javascript:alert(1))",
+        ]);
+
+        $this->actingAs($user)
+            ->get(route('stocks.show', $stock->id))
+            ->assertOk()
+            ->assertSee('<h1>Detail Markdown</h1>', false)
+            ->assertDontSee('<script>alert(', false)
+            ->assertDontSee('href="javascript:', false)
+            ->assertDontSee('<link rel="preload" as="style" href="https://uicdn.toast.com', false)
+            ->assertDontSee('<script defer src="https://uicdn.toast.com', false);
+    }
+
     public function test_open_and_close_edit_modal(): void
     {
         $user = User::factory()->member()->create();
@@ -217,4 +235,3 @@ class StockDetailLivewireTest extends TestCase
             ->assertSet('confirmingCoverDeletion', false);
     }
 }
-

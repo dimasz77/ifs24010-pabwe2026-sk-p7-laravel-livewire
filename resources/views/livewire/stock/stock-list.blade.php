@@ -1,9 +1,4 @@
 <div>
-    <!-- Toast UI Editor CDN Styles & Scripts -->
-    <link rel="preload" as="style" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"></noscript>
-    <script defer src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-
     <!-- Top Action Bar -->
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8 pb-6 border-b-2 border-slate-200">
         <div>
@@ -364,30 +359,46 @@
                                  x-data="{
                                      desc: @entangle('formDescription'),
                                      editor: null,
-                                     init() {
-                                         this.editor = new toastui.Editor({
-                                             el: this.$refs.formEditorContainer,
-                                             height: '240px',
-                                             initialEditType: 'wysiwyg',
-                                             previewStyle: 'vertical',
-                                             initialValue: this.desc || '',
-                                             placeholder: 'Detail spesifikasi barang dalam format teks atau markdown...',
-                                             events: {
-                                                 change: () => {
-                                                     this.desc = this.editor.getMarkdown();
-                                                 }
+                                     loadingEditor: true,
+                                     editorError: false,
+                                     async init() {
+                                         try {
+                                             const Editor = await window.loadToastUIEditor();
+                                             if (!this.$refs.formEditorContainer?.isConnected) {
+                                                 return;
                                              }
-                                         });
 
-                                         this.$watch('desc', value => {
-                                             if (this.editor && value !== this.editor.getMarkdown()) {
-                                                 this.editor.setMarkdown(value || '', false);
-                                             }
-                                         });
+                                             this.editor = new Editor({
+                                                 el: this.$refs.formEditorContainer,
+                                                 height: '240px',
+                                                 initialEditType: 'wysiwyg',
+                                                 previewStyle: 'vertical',
+                                                 initialValue: this.desc || '',
+                                                 placeholder: 'Detail spesifikasi barang dalam format teks atau markdown...',
+                                                 events: {
+                                                     change: () => {
+                                                         this.desc = this.editor.getMarkdown();
+                                                     }
+                                                 }
+                                             });
+
+                                             this.$watch('desc', value => {
+                                                 if (this.editor && value !== this.editor.getMarkdown()) {
+                                                     this.editor.setMarkdown(value || '', false);
+                                                 }
+                                             });
+                                         } catch (error) {
+                                             console.error(error);
+                                             this.editorError = true;
+                                         } finally {
+                                             this.loadingEditor = false;
+                                         }
                                      }
                                  }"
                                  class="rounded-xl border border-slate-300 overflow-hidden bg-white">
-                                <div x-ref="formEditorContainer"></div>
+                                    <p x-show="loadingEditor" class="p-4 text-sm text-slate-500">Memuat editor deskripsi...</p>
+                                    <p x-show="editorError" role="alert" class="p-4 text-sm text-rose-700">Editor gagal dimuat. Muat ulang halaman dan coba lagi.</p>
+                                    <div x-ref="formEditorContainer"></div>
                             </div>
                             @error('formDescription')
                                 <span class="text-xs text-rose-600 mt-1 block">{{ $message }}</span>
