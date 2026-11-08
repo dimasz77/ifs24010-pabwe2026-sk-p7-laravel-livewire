@@ -16,12 +16,19 @@ class CachedStylesheetTest extends TestCase
             ->assertDontSee('livewire.min.js', false);
     }
 
-    public function test_production_layout_loads_stylesheet_before_rendering_the_page(): void
+    public function test_public_auth_pages_inline_stylesheet_without_requesting_external_css(): void
     {
         $this->get('/login')
             ->assertOk()
-            ->assertSee('rel="stylesheet" href="', false)
-            ->assertDontSee('rel="preload"', false);
+            ->assertSee('<style>', false)
+            ->assertSee('.min-h-screen', false)
+            ->assertDontSee('assets/css/app-', false);
+
+        $this->get('/register')
+            ->assertOk()
+            ->assertSee('<style>', false)
+            ->assertSee('.min-h-screen', false)
+            ->assertDontSee('assets/css/app-', false);
     }
 
     public function test_hashed_stylesheet_is_served_with_a_year_of_immutable_caching(): void
