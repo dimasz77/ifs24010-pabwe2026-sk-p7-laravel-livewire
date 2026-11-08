@@ -21,6 +21,7 @@ class LoginTest extends TestCase
             ->assertSee('Username atau Email')
             ->assertSee('id="login-username"', false)
             ->assertSee('id="login-password"', false)
+            ->assertSee('id="login-submit"', false)
             ->assertDontSee('livewire.min.js');
 
         $this->assertStringNotContainsString(
