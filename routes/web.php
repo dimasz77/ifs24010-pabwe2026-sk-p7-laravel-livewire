@@ -15,17 +15,17 @@ Route::get('/assets/css/{filename}', CachedStylesheetController::class)
     ->where('filename', '[A-Za-z0-9._-]+')
     ->name('assets.css');
 
-Route::middleware(['throttle:1000-per-second'])->group(function () {
-    // Root Redirection
-    Route::get('/', function () {
-        if (Auth::check()) {
-            return Auth::user()->isAdmin()
-                ? redirect()->route('admin.users')
-                : redirect()->route('stocks.index');
-        }
+Route::get('/', function () {
+    if (Auth::check()) {
+        return Auth::user()->isAdmin()
+            ? redirect()->route('admin.users')
+            : redirect()->route('stocks.index');
+    }
 
-        return redirect()->route('login');
-    });
+    return view('livewire.auth.login');
+});
+
+Route::middleware(['throttle:1000-per-second'])->group(function () {
 
     // Guest Authentication Routes
     Route::middleware('guest')->group(function () {

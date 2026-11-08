@@ -10,10 +10,11 @@ class RoutingTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_root_redirects_guest_to_login(): void
+    public function test_root_renders_login_for_guest_without_redirecting(): void
     {
         $this->get('/')
-            ->assertRedirect(route('login'));
+            ->assertOk()
+            ->assertViewIs('livewire.auth.login');
     }
 
     public function test_root_redirects_member_to_stocks(): void
