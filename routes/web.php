@@ -23,7 +23,7 @@ Route::get('/', function () {
     }
 
     return view('livewire.auth.login');
-});
+})->name('home');
 
 Route::middleware(['throttle:1000-per-second'])->group(function () {
 

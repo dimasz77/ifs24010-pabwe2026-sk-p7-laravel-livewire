@@ -6,6 +6,16 @@ use Tests\TestCase;
 
 class CachedStylesheetTest extends TestCase
 {
+    public function test_root_page_inlines_stylesheet_to_avoid_a_render_blocking_request(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('<style>', false)
+            ->assertSee('.min-h-screen', false)
+            ->assertDontSee('assets/css/app-', false)
+            ->assertDontSee('livewire.min.js', false);
+    }
+
     public function test_production_layout_loads_stylesheet_before_rendering_the_page(): void
     {
         $this->get('/login')

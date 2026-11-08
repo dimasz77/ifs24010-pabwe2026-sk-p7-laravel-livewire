@@ -8,6 +8,8 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     @if (app(\Illuminate\Foundation\Vite::class)->isRunningHot())
         @vite('resources/css/app.css')
+    @elseif (request()->routeIs('home'))
+        <style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/app.css') !!}</style>
     @else
         @php($stylesheetUrl = route('assets.css', ['filename' => basename(parse_url(\Illuminate\Support\Facades\Vite::asset('resources/css/app.css'), PHP_URL_PATH))]))
         <link rel="stylesheet" href="{{ $stylesheetUrl }}">
@@ -18,7 +20,7 @@
         html:has(.modal-scroll-lock),
         body:has(.modal-scroll-lock) { overflow: hidden !important; overscroll-behavior: none; }
     </style>
-    @unless (request()->routeIs('login', 'register'))
+    @unless (request()->routeIs('home', 'login', 'register'))
         @livewireStyles
     @endunless
 </head>
@@ -154,7 +156,7 @@
         </div>
     @endauth
 
-    @unless (request()->routeIs('login', 'register'))
+    @unless (request()->routeIs('home', 'login', 'register'))
         @livewireScripts
     @endunless
 </body>
