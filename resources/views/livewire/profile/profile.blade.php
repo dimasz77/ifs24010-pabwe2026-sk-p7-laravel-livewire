@@ -65,21 +65,21 @@
 
                 <form wire:submit.prevent="updateProfileInformation" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
-                        <input wire:model="name" type="text" class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <label for="profile-name" class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+                        <input id="profile-name" wire:model="name" type="text" class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         @error('name') <span class="text-xs text-rose-600 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
-                            <input wire:model="username" type="text" class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono" required>
+                            <label for="profile-username" class="block text-sm font-medium text-slate-700 mb-1">Username</label>
+                            <input id="profile-username" wire:model="username" type="text" class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono" required>
                             @error('username') <span class="text-xs text-rose-600 mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                            <input wire:model="email" type="email" class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <label for="profile-email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                            <input id="profile-email" wire:model="email" type="email" class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                             @error('email') <span class="text-xs text-rose-600 mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>

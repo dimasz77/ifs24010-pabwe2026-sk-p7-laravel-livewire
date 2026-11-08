@@ -27,6 +27,22 @@ class ProfileLivewireTest extends TestCase
             ->assertRedirect(route('login'));
     }
 
+    public function test_profile_form_inputs_have_labels_and_livewire_script_is_deferred(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/profile');
+
+        $response->assertOk()
+            ->assertSee('for="profile-name"', false)
+            ->assertSee('id="profile-name"', false)
+            ->assertSee('for="profile-username"', false)
+            ->assertSee('id="profile-username"', false)
+            ->assertSee('for="profile-email"', false)
+            ->assertSee('id="profile-email"', false)
+            ->assertSee('defer="true"', false);
+    }
+
     public function test_profile_mounts_with_authenticated_user_data(): void
     {
         $user = User::factory()->create([
