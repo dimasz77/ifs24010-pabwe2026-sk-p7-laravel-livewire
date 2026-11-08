@@ -1,7 +1,8 @@
 <div>
     <!-- Toast UI Editor CDN Styles & Scripts -->
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <link rel="preload" as="style" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"></noscript>
+    <script defer src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 
     <!-- Top Action Bar -->
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8 pb-6 border-b-2 border-slate-200">
@@ -108,8 +109,8 @@
         </div>
 
         <div class="flex items-center space-x-3 w-full sm:w-auto">
-            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status:</label>
-            <select wire:model.live="statusFilter"
+            <label for="stock-status-filter" class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status:</label>
+            <select id="stock-status-filter" wire:model.live="statusFilter"
                 class="px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
                 <option value="">Semua Status</option>
                 @foreach ($statuses as $status)
@@ -671,4 +672,3 @@
         </div>
     @endif
 </div>
-

@@ -1,37 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<html lang="id" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'StokKu Gudang' }} - PABWE 2026</title>
+    <meta name="description" content="StokKu Gudang membantu Anda mengelola inventaris, memantau ketersediaan barang, dan mengatur batas minimum stok.">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Tema "Gudang": palet teal + stone, sudut lebih tegas, font Plus Jakarta Sans.
-        // Kelas bawaan blue/slate dipetakan ulang agar seluruh komponen otomatis mengikuti tema baru.
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-                    },
-                    borderRadius: { lg: '0.375rem', xl: '0.5rem', '2xl': '0.75rem' },
-                    colors: {
-                        blue: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',300:'#5eead4',400:'#2dd4bf',500:'#14b8a6',600:'#0d9488',700:'#0f766e',800:'#115e59',900:'#134e4a' },
-                        indigo: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',300:'#5eead4',400:'#2dd4bf',500:'#14b8a6',600:'#0d9488',700:'#0f766e',800:'#115e59',900:'#134e4a' },
-                        slate: { 50:'#fafaf9',100:'#f5f5f4',200:'#e7e5e4',300:'#d6d3d1',400:'#a8a29e',500:'#78716c',600:'#57534e',700:'#44403c',800:'#292524',900:'#1c1917' },
-                        gray: { 50:'#fafaf9',100:'#f5f5f4',200:'#e7e5e4',300:'#d6d3d1',400:'#a8a29e',500:'#78716c',600:'#57534e',700:'#44403c',800:'#292524',900:'#1c1917' },
-                        purple: { 50:'#fffbeb',100:'#fef3c7',200:'#fde68a',300:'#fcd34d',400:'#fbbf24',500:'#f59e0b',600:'#d97706',700:'#b45309',800:'#92400e',900:'#78350f' },
-                        ink: '#12201f',
-                    },
-                },
-            },
-        };
-    </script>
+    @vite('resources/css/app.css')
     <style>
         [x-cloak] { display: none !important; }
         body { background-image: radial-gradient(#d6d3d1 1px, transparent 1px); background-size: 22px 22px; background-color: #fafaf9; }

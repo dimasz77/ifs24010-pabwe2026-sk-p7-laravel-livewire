@@ -38,8 +38,8 @@
         </div>
 
         <div class="flex items-center space-x-3 w-full sm:w-auto">
-            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status:</label>
-            <select wire:model.live="statusFilter" class="px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+            <label for="admin-stock-status-filter" class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status:</label>
+            <select id="admin-stock-status-filter" wire:model.live="statusFilter" class="px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
                 <option value="">Semua Status</option>
                 @foreach ($statuses as $status)
                     <option value="{{ $status->value }}">{{ $status->label() }}</option>
@@ -113,4 +113,3 @@
         </div>
     </div>
 </div>
-

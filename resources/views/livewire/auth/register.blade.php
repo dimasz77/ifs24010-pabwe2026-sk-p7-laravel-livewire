@@ -1,7 +1,7 @@
 <div class="w-full max-w-md mx-auto">
     <div class="mb-8">
         <span class="inline-block px-2.5 py-1 mb-3 rounded bg-amber-100 text-amber-800 text-[11px] font-bold uppercase tracking-widest">Akun baru</span>
-        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Buat Akun Member</h2>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Buat Akun Member</h1>
         <p class="text-sm text-slate-500 mt-2">Daftar sekarang untuk mulai mengelola stok barang Anda</p>
     </div>
 

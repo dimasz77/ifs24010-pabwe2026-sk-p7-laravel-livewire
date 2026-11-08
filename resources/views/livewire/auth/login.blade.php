@@ -1,7 +1,7 @@
 <div class="w-full max-w-md mx-auto">
     <div class="mb-8">
         <span class="inline-block px-2.5 py-1 mb-3 rounded bg-teal-100 text-teal-800 text-[11px] font-bold uppercase tracking-widest">Selamat datang kembali</span>
-        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Masuk ke Akun Anda</h2>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Masuk ke Akun Anda</h1>
         <p class="text-sm text-slate-500 mt-2">Kelola inventaris stok barang Anda secara teratur dan akurat</p>
     </div>
 
