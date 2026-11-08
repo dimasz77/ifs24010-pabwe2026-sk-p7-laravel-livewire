@@ -10,8 +10,7 @@
         @vite('resources/css/app.css')
     @else
         @php($stylesheetUrl = route('assets.css', ['filename' => basename(parse_url(\Illuminate\Support\Facades\Vite::asset('resources/css/app.css'), PHP_URL_PATH))]))
-        <link rel="preload" href="{{ $stylesheetUrl }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="{{ $stylesheetUrl }}"></noscript>
+        <link rel="stylesheet" href="{{ $stylesheetUrl }}">
     @endif
     <style>
         [x-cloak] { display: none !important; }

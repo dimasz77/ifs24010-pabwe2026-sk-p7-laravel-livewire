@@ -6,14 +6,12 @@ use Tests\TestCase;
 
 class CachedStylesheetTest extends TestCase
 {
-    public function test_production_layout_preloads_stylesheet_without_blocking_render(): void
+    public function test_production_layout_loads_stylesheet_before_rendering_the_page(): void
     {
         $this->get('/login')
             ->assertOk()
-            ->assertSee('rel="preload"', false)
-            ->assertSee('as="style"', false)
-            ->assertSee("this.onload=null;this.rel='stylesheet'", false)
-            ->assertSee('<noscript><link rel="stylesheet"', false);
+            ->assertSee('rel="stylesheet" href="', false)
+            ->assertDontSee('rel="preload"', false);
     }
 
     public function test_hashed_stylesheet_is_served_with_a_year_of_immutable_caching(): void
