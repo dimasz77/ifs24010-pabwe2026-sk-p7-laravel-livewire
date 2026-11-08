@@ -6,7 +6,11 @@
     <title>{{ $title ?? 'StokKu Gudang' }} - PABWE 2026</title>
     <meta name="description" content="StokKu Gudang membantu Anda mengelola inventaris, memantau ketersediaan barang, dan mengatur batas minimum stok.">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    @vite('resources/css/app.css')
+    @if (app(\Illuminate\Foundation\Vite::class)->isRunningHot())
+        @vite('resources/css/app.css')
+    @else
+        <link rel="stylesheet" href="{{ route('assets.css', ['filename' => basename(parse_url(\Illuminate\Support\Facades\Vite::asset('resources/css/app.css'), PHP_URL_PATH))]) }}">
+    @endif
     <style>
         [x-cloak] { display: none !important; }
         body { background-image: radial-gradient(#d6d3d1 1px, transparent 1px); background-size: 22px 22px; background-color: #fafaf9; }

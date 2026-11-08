@@ -6,9 +6,14 @@ use App\Features\Profile\Livewire\Profile;
 use App\Features\Stock\Livewire\StockDetail;
 use App\Features\Stock\Livewire\StockList;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CachedStylesheetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/assets/css/{filename}', CachedStylesheetController::class)
+    ->where('filename', '[A-Za-z0-9._-]+')
+    ->name('assets.css');
 
 Route::middleware(['throttle:1000-per-second'])->group(function () {
     // Root Redirection
